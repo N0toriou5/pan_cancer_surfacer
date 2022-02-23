@@ -1,2 +1,3 @@
-# pan_cancer_surfacer
-Code to produce a cell surface proteins-centered network analysis to identify pan-cancer deregulated biomarkers
+# Detection of pan-cancer surface protein biomarkers via a network-based approach on trascriptomics data
+
+
