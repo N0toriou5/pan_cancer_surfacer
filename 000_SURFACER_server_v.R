@@ -1,5 +1,5 @@
-# SURFACER for our server
-# The PAN-Cancer Surfaceome Landscape . generate all MRAs
+# SURFACER core pipeline to run on a server
+# The PAN-Cancer Surfaceome Landscape . generate all MRAs. This code summarize steps
 setwd("/home/PERSONALE/daniele.mercatelli2/SURFACER2/")
 library(stringr)
 library(matrixStats)
