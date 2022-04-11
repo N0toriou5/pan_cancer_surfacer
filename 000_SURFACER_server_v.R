@@ -9,7 +9,7 @@ library(ggforce)
 library(edgeR)
 library(DESeq2)
 load("data/surfacer_2022.rda")
-tissues<-c("adrenal gland","breast","brain","esophagus","kidney","liver","lung","ovary","pancreas", "prostate", "skin", 
+tissues<-c("adrenal gland","breast","brain","esophagus","liver","lung","ovary","pancreas", "prostate", "skin", 
            "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
 
 ### Try the TCGABiolinks mode----
