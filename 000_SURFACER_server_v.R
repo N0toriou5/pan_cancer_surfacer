@@ -1,17 +1,16 @@
 # SURFACER core pipeline to run on a server
 # The PAN-Cancer Surfaceome Landscape . generate all MRAs. This code summarize steps
 setwd("set_your_home_dir/")
+# load all required libraries and set up the environment
 library(stringr)
 library(matrixStats)
 library(corto)
 library(ggforce)
 library(edgeR)
 library(DESeq2)
-#source("F:/Archive/vst.R")
-# surfaceR approach on TCGA ovarian cancer
 load("data/surfacer_2022.rda")
-tissues<-c("adrenal gland","breast","brain","esophagus","kidney","liver","lung","ovary","pancreas", "prostate", 
-           "stomach", "testis", "thyroid", "uterus") # "brain", should be added furtherly 
+tissues<-c("adrenal gland","breast","brain","esophagus","kidney","liver","lung","ovary","pancreas", "prostate", "skin", 
+           "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
 
 ### Try the TCGABiolinks mode----
 library(TCGAbiolinks)
