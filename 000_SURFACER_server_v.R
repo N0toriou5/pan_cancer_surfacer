@@ -424,6 +424,6 @@ for (file in filenames){
   dev.off()
 }
 
-### Druggability (step 9)
+### Druggable genome analysis (step 9)
 
 
