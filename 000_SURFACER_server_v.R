@@ -420,5 +420,48 @@ for (file in filenames){
 }
 
 ### Druggable genome analysis (step 9)
+read_drugbank_xml_db("data/drugbank_db.xml") # load the drugbank database in xml format
+# N.B. it is required to have a DrugBank account to access the XML!
+load("results/pantargets.rda")
+drugs <- drugs() # drugs info parsing
+drugs_info <- drugs$general_information
+drug_targets_actions <- targets_actions()
+drug_groups <- drug_groups()
+approved_drugs <- drug_groups[drug_groups$group == "approved",]$`drugbank-id` # filtering for FDA prroved drugs only
+all_targets <- cett()
+all_poly <- rbind(all_targets$carriers_polypeptides, all_targets$enzymes_polypeptides, all_targets$targets_polypeptides, 
+                  all_targets$transporters_polypeptides)
+# output is a data frame containing only useful information mapping "parent_key' on 
+# drugbank_id (vd group in drug_groups) and drugs name from drugs data
 
+all_targets_DT <- rbind(all_targets$carriers, all_targets$enzymes[,1:6], all_targets$targets, all_targets$transporters)
+DT <- data.frame(Targets=character(),Drugs=character())
+for (t in mytargets){
+  #print(i)
+  if (t %in% all_poly$gene_name){
+    print(t)
+    df <- data.frame()
+    target_DBid <-  all_poly[all_poly$gene_name == t,]$parent_id
+    print(target_DBid)
+    drugs_DBid <- all_targets_DT[all_targets_DT$id == target_DBid,]$parent_key
+    print(drugs_DBid)
+    approved_drugs_x_target <- as.character()
+    for (d in drugs_DBid){
+      if (d %in% approved_drugs){
+        print(d)
+        approved_drugs_x_target <- c(approved_drugs_x_target, d)
+      }
+    }
+    approved_drugnames_x_target <- as.character()
+    for (a in approved_drugs_x_target){
+      drug_name <- drugs_info[drugs_info$primary_key == a,]$name
+      approved_drugnames_x_target <- c(approved_drugnames_x_target, drug_name)
+    }
+    if (length(approved_drugnames_x_target) != 0){
+      df_target <- data.frame(Targets=t, Drugs=approved_drugnames_x_target)
+      print(df_target)
+      DT <- rbind(DT,df_target)}
+    
+  }
+}
 
