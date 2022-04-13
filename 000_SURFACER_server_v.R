@@ -388,8 +388,6 @@ for (file in filenames){
   }
   
   k<-which.max(distances)
-  #fviz_nbclust(t(toshow), kmeans, diss=clustering_distance_cols,method = "gap_stat",nboot=100)
-  # fviz_nbclust(t(toshow), kmeans, diss=clustering_distance_cols,method = "silhouette")
   png(paste0("plots/004_",subtype,"_elbow.png"),w=2000,h=1500,res=450)
   plotting<-gp+geom_vline(xintercept = k, linetype = 2)+
     labs(subtitle = "Elbow method")
@@ -400,9 +398,6 @@ for (file in filenames){
   # Color function
   colfun<-colorRampPalette(c("navy","navy","blue","blue","white","red","red","red3","red3"))
   toplot<-toshow
-  #toplot[toplot>10]<-10
-  #toplot[toplot< -10]<-(-10)
-  
   png(paste0("plots/004_",subtype,"_heatmap.png"),w=4000,h=3000,res=300)
   heatmap.3(toplot,KeyValueName = "NES",hcc=res.hc,col=colfun,ColSideColors = colside)
   dev.off()
