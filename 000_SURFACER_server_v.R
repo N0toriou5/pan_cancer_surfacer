@@ -423,7 +423,7 @@ for (file in filenames){
 read_drugbank_xml_db("data/drugbank_db.xml") # load the drugbank database in xml format
 # N.B. it is required to have a DrugBank account to access the XML!
 load("results/pantargets.rda")
-drugs <- drugs() # drugs info parsing
+drugs <- drugs() # drugs info parsing (since these commands may take a while, it is suggested to save objects for further analysis)
 drugs_info <- drugs$general_information
 drug_targets_actions <- targets_actions()
 drug_groups <- drug_groups()
