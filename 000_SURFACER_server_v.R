@@ -22,8 +22,8 @@ library(TCGAutils)
 library(limma)
 library(biomaRt)
 library(factoextra)
-source("data/squisher.R")
-source("data/ensembl2symbol.R")
+source("data/squisher.R") # load the squisher function, R script is included in this repository
+source("data/ensembl2symbol.R") # load the gene conversion function, R script is included in this repository
 
 
 for (tissue in tissues) {
