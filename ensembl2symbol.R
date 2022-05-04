@@ -1,5 +1,5 @@
 # Enseble2symbols.R
-
+# sometimes bioMart site is unaccessible (e.g. 2 May 2022). To fix this, just specify the following host argument in line 11: host = "dec2021.archive.ensembl.org"
 getEnsemblGenes <- function() {
   library(biomaRt)
   getBM(
