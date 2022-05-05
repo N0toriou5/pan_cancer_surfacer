@@ -1,6 +1,23 @@
 # SURFACER core pipeline to run on a server
 # The PAN-Cancer Surfaceome Landscape . generate all MRAs. 
 setwd("set_your_home_dir/")
+
+# If the packages are not available, we will install them using Bioconductor. This code part install and load all required packages to run the SURFACER protocol.
+
+if (!requireNamespace("BiocManager",quietly=TRUE)){
+  install.packages("BiocManager")
+}
+packages<-c("corto","DESeq2","ggforce","stringr","matrixStats","TCGAbiolinks","SummarizedExperiment",
+            "recount","TCGAutils","biomaRt","limma","factoextra","survival","dbparser"
+)
+for(p in packages){
+  if (!p %in% rownames(installed.packages())){
+    BiocManager::install(p)
+  }
+  library(p,character.only=TRUE)
+}
+
+
 # load all required libraries and set up the environment
 library(stringr)
 library(matrixStats)
@@ -287,7 +304,7 @@ for (name in surfacer){
 }
 
 ### Survival Analysis (step 8)
-
+library(survival)
 ### one gene survival
 filenames<-dir(path="results/",pattern = "-expmat",full.names=TRUE)
 subtypes<- str_match(filenames, "-\\s*(.*?)\\s*-")
@@ -418,7 +435,7 @@ for (file in filenames){
   print(gp)
   dev.off()
 }
-
+library(dbparser)
 ### Druggable genome analysis (step 9)
 read_drugbank_xml_db("data/drugbank_db.xml") # load the drugbank database in xml format
 # N.B. it is required to have a DrugBank account to access the XML!
