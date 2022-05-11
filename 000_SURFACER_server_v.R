@@ -25,7 +25,7 @@ library(corto)
 library(ggforce)
 library(edgeR)
 library(DESeq2)
-load("data/surfacer_2022.rda")
+load("data/surfacer_2022.rda") ### load a list of unique cell-surface protein coding genes. This will be used to build the coexpression network.
 tissues<-c("adrenal gland","breast","brain","esophagus","liver","lung","ovary","pancreas", "prostate", "skin", 
            "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
 
