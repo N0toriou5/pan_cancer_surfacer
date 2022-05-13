@@ -142,7 +142,8 @@ for (tissue in tissues) {
       
       ### This code part performs step 4
       if(!file.exists(paste0("data/GTEx_",name,"_",subtype,"-regulon.rda"))){
-        # create the surface activity network for normal reference tissue
+        # create the surface activity network for normal reference tissue.  This step requires a lot of time, 
+        # regulons can be found in the "GTEx_surface_activity_nets" folder
         regulon<-corto(expmat[,colnames(gnorm)],centroids=surfacer,nbootstraps = 1000,p=1e-08,nthreads=20,
                        verbose = TRUE)
         save(regulon,file = paste0("data/GTEx_",name,"_",subtype,"-regulon.rda"))
@@ -213,7 +214,8 @@ for (tissue in tissues) {
     dev.off()
     
     if(!file.exists(paste0("data/GTEx_",name,"-regulon.rda"))){
-      # create the surface activity network for normal reference tissue
+      # create the surface activity network for normal reference tissue. This step requires a lot of time, 
+      # regulons can be found in the "GTEx_surface_activity_nets" folder
       regulon<-corto(expmat[,colnames(gnorm)],centroids=surfacer,nbootstraps = 1000,p=1e-08,nthreads=20,
                      verbose = TRUE)
       save(regulon,file = paste0("data/GTEx_",name,"-regulon.rda"))
