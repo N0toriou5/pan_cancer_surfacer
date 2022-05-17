@@ -306,6 +306,8 @@ for (name in surfacer){
 }
 
 ### Survival Analysis (step 8)
+### to perform survival analysis, TCGA patients survival info are required. 
+### survival objects are available in the TCGA_survival_objects folder in this repository
 library(survival)
 ### one gene survival
 filenames<-dir(path="results/",pattern = "-expmat",full.names=TRUE)
@@ -439,6 +441,8 @@ for (file in filenames){
 }
 library(dbparser)
 ### Druggable genome analysis (step 9)
+### Since a DrugBank account is required to download the data, the code is reported as example, but cannot be run without objects that are freely
+### available to DrugBank registered users (academic accounts)
 read_drugbank_xml_db("data/drugbank_db.xml") # load the drugbank database in xml format
 # N.B. it is required to have a DrugBank account to access the XML!
 load("results/pantargets.rda")
