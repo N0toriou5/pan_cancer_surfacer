@@ -1,5 +1,5 @@
-# SURFACER core pipeline to run on a server
-# The PAN-Cancer Surfaceome Landscape . generate all MRAs. 
+# SURFACER core pipeline
+
 setwd("set_your_home_dir/")
 
 # If the packages are not available, we will install them using Bioconductor. This code part install and load all required packages to run the SURFACER protocol.
@@ -19,29 +19,27 @@ for(p in packages){
 
 
 # load all required libraries and set up the environment
-library(stringr)
-library(matrixStats)
+library(biomaRt)
 library(corto)
-library(ggforce)
-library(edgeR)
 library(DESeq2)
-load("data/surfacer_2022.rda") ### load a list of unique cell-surface protein coding genes. This will be used to build the coexpression network.
+library(edgeR)
+library(factoextra)
+library(ggforce)
+library(limma)
+library(matrixStats)
+library(recount)
+library(stringr)
+library(SummarizedExperiment)
+library(TCGAbiolinks)
+library(TCGAutils)
+dir.create("plots")
+dir.create("results")
+### load the surfacer gene list
+load("data/surfacer_2022_fixed.rda") # the surfacer list is included in this repository (main branch)
+source("data/squisher.R") # load the squisher function, R script is included in this repository (main branch)
+source("data/ensembl2symbol.R") # load the gene conversion function, R script is included in this repository (main branch)
 tissues<-c("adrenal gland","breast","brain","esophagus","liver","lung","ovary","pancreas", "prostate", "skin", 
            "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
-
-### Try the TCGABiolinks mode----
-library(TCGAbiolinks)
-library(SummarizedExperiment)
-library(recount)
-
-###conversion of uuids to TCGA barcodes
-library(TCGAutils)
-library(limma)
-library(biomaRt)
-library(factoextra)
-source("data/squisher.R") # load the squisher function, R script is included in this repository
-source("data/ensembl2symbol.R") # load the gene conversion function, R script is included in this repository
-
 
 for (tissue in tissues) {
   ########Query from Recount2 platform#######
