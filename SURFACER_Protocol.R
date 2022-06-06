@@ -231,7 +231,7 @@ for (tissue in tissues) {
 }
 
 ### Differential Expression Analysis (step 3)
-filenames<-dir(path="results/",pattern = "-expmat.rda",full.names=TRUE) # eliminare il 3 LAML
+filenames<-dir(path="results/",pattern = "-expmat.rda",full.names=TRUE) 
 delist<-list()
 
 for (i in 1:length(filenames)){
