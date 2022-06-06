@@ -211,6 +211,7 @@ for (tissue in tissues) {
     print(gp)
     dev.off()
     
+    ### This code part performs step 4
     if(!file.exists(paste0("data/GTEx_",name,"-regulon.rda"))){
       # create the surface activity network for normal reference tissue. This step requires a lot of time, 
       # regulons can be found in the "GTEx_surface_activity_nets" folder
@@ -219,7 +220,7 @@ for (tissue in tissues) {
       save(regulon,file = paste0("data/GTEx_",name,"-regulon.rda"))
     } else {load(paste0("data/GTEx_",name,"-regulon.rda"))}
     
-    # MRA Tumor vs. Normal
+    # MRA Tumor vs. Normal (step 5)
     if(!file.exists(paste0("results/000_tcga_",name,"-mra.rda"))){
       newcounts<-expmat[rowVars(expmat)>0.01,]
       mr<-mra(newcounts[,colnames(tumor)],newcounts[,colnames(gnorm)],regulon=regulon,minsize=15,nperm=1000,nthreads = 20,verbose=TRUE)
