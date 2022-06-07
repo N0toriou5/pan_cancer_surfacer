@@ -274,6 +274,7 @@ for (tissue in tissues) {
   } 
   
 }
+save(delist,file="results/000_DEA.rda")
 
 #### The following code part performs step 6 (it identifies SSHs)
 filenames<-dir(path="results/",pattern = "-mra",full.names=TRUE)
