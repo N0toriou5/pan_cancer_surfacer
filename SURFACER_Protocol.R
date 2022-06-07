@@ -323,18 +323,24 @@ for (name in surfacer){
   }
   ifelse(ev==TRUE,mytargets<-c(mytargets,name),mytargets<-mytargets)  
 }
+save(mytargets,file="results/pantargets.rda")
 
 ### Survival Analysis (step 8)
 ### to perform survival analysis, TCGA patients survival info are required. 
 ### survival objects are available in the TCGA_survival_objects folder in this repository
+### Univariate Cox regression analysis followed by BH correction for multiple testing
 library(survival)
-### one gene survival
+library(stringr)
+load("results/pantargets.rda")
 filenames<-dir(path="results/",pattern = "-expmat",full.names=TRUE)
 subtypes<- str_match(filenames, "-\\s*(.*?)\\s*-")
 subtypes<-gsub("-","",subtypes)[,1]
 subtypes<-sort(subtypes)
 survmat<-matrix(ncol=20,nrow=length(mytargets),dimnames = list(mytargets,subtypes))
+
+
 for (subtype in subtypes){
+  survres<-data.frame()
   load(paste0("data/tcga_",subtype,"-survival.rda"))
   file<-filenames[grep(subtype, filenames)]
   load(file)
@@ -352,29 +358,51 @@ for (subtype in subtypes){
     track<-as.factor(track)
     track<-relevel(track,ref=paste0(mygene,"low"))
     
+    #fit <- glmnet(survival, track, family = "cox")
     
     # Fit model
     sdiff<-survdiff(survival~track)
     l<-sdiff$obs
     m<-(l[1]+0.1)/(l[2]+0.1)
-    p<-1-pchisq(sdiff$chisq, df=length(sdiff$n) - 1)
     events_difference<-sdiff$obs-sdiff$exp
+    #p <- 1 - pchisq(sdiff$chisq, df=length(sdiff$n) - 1)
     if(events_difference[1]>events_difference[length(events_difference)]){
       sign<-"neg"
     } else {
       sign<-"pos"
     }
-    if( p<=0.05){
-      ifelse(sign=="pos",survmat[mygene,subtype]<- (-log10(p)),survmat[mygene,subtype]<- (-(-log10(p))))
-      png(paste0("plots/003_",subtype,"_",mygene,".png"),w=1500,h=1500,res=300)
-      #plotstepsurv(oritrack = oritrack,survival = survival,mygene=mygene,ngroups=4,cox_survival = TRUE,title=mygene)
-      plotclassicsurv(oritrack = oritrack,survival = survival,mygene=mygene,title=paste(subtype,mygene))
-      dev.off()
+    x<-coxph(survival~oritrack)
+    x<-summary(x)
+    p<-signif(x$logtest["pvalue"],digits=4)
+    #### I should break it here
+    vector<-c(c(mygene,p,sign,0))
+    survres<-rbind(survres,vector)
+  }
+  colnames(survres)<-c("mygene","p","sign","FDR")
+  survres$FDR<-p.adjust(survres$p,method = "BH")
+  for (i in 1:nrow(survres)){
+    if (survres[i,4]<=0.15){
+      ifelse(survres[i,3]=="pos",survmat[survres[i,1],subtype]<- (-log10(survres[i,4])),survmat[survres[i,1],subtype]<- (-(-log10(survres[i,4]))))
     }else
-      {next}
-    }
-
+     {next}
+  }
 }
+
+survmat[is.na(survmat)]<-0
+library(pheatmap)
+paletteLength <- 50
+myColor <- colorRampPalette(c("blue", "azure", "red"))(paletteLength)
+mat_zscore<-survmat
+keep<-(which(rowSums(mat_zscore)!=0))
+mat_zscore<-mat_zscore[keep,]
+keep<-(which(colSums(mat_zscore)!=0))
+mat_zscore<-mat_zscore[,keep]
+myBreaks <- c(seq(min(mat_zscore), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(mat_zscore)/paletteLength, max(mat_zscore), length.out=floor(paletteLength/2)))
+png("plots/SURFACER_survival_new.png",w=1500,h=6000,res=300)
+pheatmap(mat_zscore,cluster_cols = F,cluster_rows = F, color=myColor, breaks=myBreaks, angle_col = "90",border_color="white",cellheight = 10)
+dev.off()
+
 
 ### Sample-by-sample survival
 filenames<-dir(path="results/",pattern = "-expmat.rda",full.names=TRUE)
