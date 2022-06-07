@@ -162,6 +162,8 @@ for (tissue in tissues) {
       names(delist)[i]<-name
       
       ### This code part performs step 4
+      ### N.B. Since this is the most intense computational part, 
+      ### pre-computed regulons can be found in the GTEx_Surface_Activity_Networks folder
       if(!file.exists(paste0("data/GTEx_",name,"_",subtype,"-regulon.rda"))){
         # create the surface activity network for normal reference tissue.  This step requires a lot of time, 
         # regulons can be found in the "GTEx_surface_activity_nets" folder
@@ -256,6 +258,8 @@ for (tissue in tissues) {
     names(delist)[i]<-name
     
     ### This code part performs step 4
+    ### N.B. Since this is the most intense computational part, 
+    ### pre-computed regulons can be found in the GTEx_Surface_Activity_Networks folder
     if(!file.exists(paste0("data/GTEx_",name,"-regulon.rda"))){
       # create the surface activity network for normal reference tissue. This step requires a lot of time, 
       # regulons can be found in the "GTEx_surface_activity_nets" folder
