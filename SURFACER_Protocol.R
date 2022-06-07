@@ -40,8 +40,10 @@ source("data/squisher.R") # load the squisher function, R script is included in 
 source("data/ensembl2symbol.R") # load the gene conversion function, R script is included in this repository (main branch)
 tissues<-c("adrenal gland","breast","brain","esophagus","liver","lung","ovary","pancreas", "prostate", "skin", 
            "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
-
+delist<-list()
+i<-0
 for (tissue in tissues) {
+  
   ########Query from Recount2 platform#######
   ### This code part summarizes step 1 and 2
   recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
@@ -76,6 +78,7 @@ for (tissue in tissues) {
   subtypes<-unique(recount.tcga[[name]]$gdc_cases.project.project_id)
   if (is.null(subtypes)==FALSE){
     for (subtype in subtypes) {
+      i<-i+1
       subset <- which(recount.tcga[[name]]$gdc_cases.project.project_id==subtype)
       traw2<-traw[,subset]
       # What is normal, what is cancer
@@ -137,6 +140,26 @@ for (tissue in tissues) {
       png(paste0("plots/000_pca",name,"_",subtype,".png"),w=1500,h=1500,res=300)
       print(gp)
       dev.off()
+      
+      ### Differential Expression Analysis (step 3)
+      # DESeq2 block (filter out poorly expressed genes)
+      group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(gnorm))))
+      names(group)<-colnames(rawmat)
+      group<-relevel(group,ref="normal")
+      design<-as.data.frame(group)
+      colnames(design)<-"cond"
+      dds<-DESeqDataSetFromMatrix(countData=rawmat,colData=design,design=~cond)
+      dds<-dds[rowSums(counts(dds))>=5,]
+      dds$cond<-relevel(dds$cond,ref="normal")
+      dea<-DESeq(dds,parallel=TRUE)
+      resultsNames(dea) #"cond_tumor_vs_normal"
+      res<-as.data.frame(results(dea,name="cond_tumor_vs_normal"))
+      res<-res[order(res$pvalue),]
+      common<-intersect(rownames(res),surfacer)
+      res<-res[common,]
+      write.xlsx(res, file=paste0("results/",name,"_DE.xlsx"))
+      delist[[i]]<-res
+      names(delist)[i]<-name
       
       ### This code part performs step 4
       if(!file.exists(paste0("data/GTEx_",name,"_",subtype,"-regulon.rda"))){
@@ -211,6 +234,27 @@ for (tissue in tissues) {
     print(gp)
     dev.off()
     
+    ### Differential Expression Analysis (step 3)
+    # DESeq2 block (filter out poorly expressed genes)
+    i<-i+1
+    group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(gnorm))))
+    names(group)<-colnames(rawmat)
+    group<-relevel(group,ref="normal")
+    design<-as.data.frame(group)
+    colnames(design)<-"cond"
+    dds<-DESeqDataSetFromMatrix(countData=rawmat,colData=design,design=~cond)
+    dds<-dds[rowSums(counts(dds))>=5,]
+    dds$cond<-relevel(dds$cond,ref="normal")
+    dea<-DESeq(dds,parallel=TRUE)
+    resultsNames(dea) #"cond_tumor_vs_normal"
+    res<-as.data.frame(results(dea,name="cond_tumor_vs_normal"))
+    res<-res[order(res$pvalue),]
+    common<-intersect(rownames(res),surfacer)
+    res<-res[common,]
+    write.xlsx(res, file=paste0("results/",name,"_DE.xlsx"))
+    delist[[i]]<-res
+    names(delist)[i]<-name
+    
     ### This code part performs step 4
     if(!file.exists(paste0("data/GTEx_",name,"-regulon.rda"))){
       # create the surface activity network for normal reference tissue. This step requires a lot of time, 
@@ -230,35 +274,6 @@ for (tissue in tissues) {
   } 
   
 }
-
-### Differential Expression Analysis (step 3)
-filenames<-dir(path="results/",pattern = "-expmat.rda",full.names=TRUE) 
-delist<-list()
-
-for (i in 1:length(filenames)){
-  file<-filenames[i]
-  load(file)
-  name<-str_match(file,"-\\s*(.*?)\\s*-")[2]
- # DESeq2 block (filter out poorly expressed genes)
-  group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(gnorm))))
-  names(group)<-colnames(rawmat)
-  group<-relevel(group,ref="normal")
-  design<-as.data.frame(group)
-  colnames(design)<-"cond"
-  dds<-DESeqDataSetFromMatrix(countData=rawmat,colData=design,design=~cond)
-  dds<-dds[rowSums(counts(dds))>=5,]
-  dds$cond<-relevel(dds$cond,ref="normal")
-  dea<-DESeq(dds,parallel=TRUE)
-  resultsNames(dea) #"cond_tumor_vs_normal"
-  res<-as.data.frame(results(dea,name="cond_tumor_vs_normal"))
-  res<-res[order(res$pvalue),]
-  common<-intersect(rownames(res),surfacer)
-  res<-res[common,]
-  write.xlsx(res, file=paste0("results/",name,"_DE.xlsx"))
-  delist[[i]]<-res
-  names(delist)[i]<-name
-}
-save(delist,file="results/000_DEA.rda")
 
 #### The following code part performs step 6 (it identifies SSHs)
 filenames<-dir(path="results/",pattern = "-mra",full.names=TRUE)
