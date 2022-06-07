@@ -341,6 +341,7 @@ for (subtype in subtypes){
   common<-intersect(colnames(expmat),names(survival))
   survival<-survival[common]
   expmat<-expmat[,common]
+  
   for (gene in mytargets){
     mygene<-gene
     oritrack<-expmat[mygene,]
