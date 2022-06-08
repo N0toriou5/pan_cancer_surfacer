@@ -404,7 +404,8 @@ pheatmap(mat_zscore,cluster_cols = F,cluster_rows = F, color=myColor, breaks=myB
 dev.off()
 
 
-### Sample-by-sample survival
+### Sample-by-sample survival and patients stratification according to surface genes activity
+### The list of pre-computed Single-Patents_MRAs are included in the "Single_Patients_Activity_Networks" folder
 filenames<-dir(path="results/",pattern = "-expmat.rda",full.names=TRUE)
 filenames<-filenames[-c(9:11)]
 
