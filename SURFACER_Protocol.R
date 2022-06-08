@@ -474,7 +474,6 @@ for (file in filenames){
   # survival
   
   load(paste0("data/tcga_",subtype,"-survival.rda"))
-  #load("F:/Projects/Survivals/TCGA/BRCA/survival.rda")
   patients<-intersect(names(colside),names(survival))
   survival<-survival[patients]
   colside<-colside[patients]
@@ -487,10 +486,11 @@ for (file in filenames){
   print(gp)
   dev.off()
 }
-library(dbparser)
+
 ### Druggable genome analysis (step 9)
 ### Since a DrugBank account is required to download the data, the code is reported as example, but cannot be run without objects that are freely
 ### available to DrugBank registered users (academic accounts)
+library(dbparser)
 read_drugbank_xml_db("data/drugbank_db.xml") # load the drugbank database in xml format
 # N.B. it is required to have a DrugBank account to access the XML!
 load("results/pantargets.rda")
