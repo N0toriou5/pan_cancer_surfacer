@@ -390,8 +390,8 @@ for (subtype in subtypes){
 
 survmat[is.na(survmat)]<-0
 library(pheatmap)
-paletteLength <- 50
-myColor <- colorRampPalette(c("blue", "azure", "red"))(paletteLength)
+paletteLength <- 400
+myColor <- colorRampPalette(c("darkblue","blue", "white", "red", "darkred"))(paletteLength)
 mat_zscore<-survmat
 keep<-(which(rowSums(mat_zscore)!=0))
 mat_zscore<-mat_zscore[keep,]
@@ -400,7 +400,7 @@ mat_zscore<-mat_zscore[,keep]
 myBreaks <- c(seq(min(mat_zscore), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(mat_zscore)/paletteLength, max(mat_zscore), length.out=floor(paletteLength/2)))
 png("plots/SURFACER_survival_new.png",w=1500,h=6000,res=300)
-pheatmap(mat_zscore,cluster_cols = F,cluster_rows = F, color=myColor, breaks=myBreaks, angle_col = "90",border_color="white",cellheight = 10)
+pheatmap(mat_zscore,cluster_cols = F,cluster_rows = F, color=myColor, breaks=myBreaks, angle_col = "90",border_color="grey",cellheight = 10)
 dev.off()
 
 
