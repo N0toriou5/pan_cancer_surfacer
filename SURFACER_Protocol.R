@@ -8,7 +8,7 @@ if (!requireNamespace("BiocManager",quietly=TRUE)){
   install.packages("BiocManager")
 }
 packages<-c("corto","DESeq2","ggforce","stringr","matrixStats","TCGAbiolinks","SummarizedExperiment",
-            "recount","TCGAutils","biomaRt","limma","factoextra","survival","dbparser", "sva"
+            "recount","TCGAutils","biomaRt","limma","factoextra","survival","dbparser", "sva", "xlsx"
 )
 for(p in packages){
   if (!p %in% rownames(installed.packages())){
@@ -33,6 +33,7 @@ library(SummarizedExperiment)
 library(sva)
 library(TCGAbiolinks)
 library(TCGAutils)
+library(xlsx)
 dir.create("plots")
 dir.create("results")
 ### load the surfacer gene list
