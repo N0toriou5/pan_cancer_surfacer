@@ -8,7 +8,7 @@ if (!requireNamespace("BiocManager",quietly=TRUE)){
   install.packages("BiocManager")
 }
 packages<-c("corto","DESeq2","ggforce","stringr","matrixStats","TCGAbiolinks","SummarizedExperiment",
-            "recount","TCGAutils","biomaRt","limma","factoextra","survival","dbparser"
+            "recount","TCGAutils","biomaRt","limma","factoextra","survival","dbparser", "sva"
 )
 for(p in packages){
   if (!p %in% rownames(installed.packages())){
@@ -30,6 +30,7 @@ library(matrixStats)
 library(recount)
 library(stringr)
 library(SummarizedExperiment)
+library(sva)
 library(TCGAbiolinks)
 library(TCGAutils)
 dir.create("plots")
@@ -116,6 +117,7 @@ for (tissue in tissues) {
       names(symbol_list)<-ensgenes
       input<-as.matrix(rawcounts[,1:ncol(rawcounts)])
       rawmat<-squish(input,symbol_list,method="sum")
+      rawmat<-ComBat_seq(rawmat,batch = group) # Batch correction
       
       # VST
       #expmat<-vst(rawcounts)
@@ -211,6 +213,7 @@ for (tissue in tissues) {
     names(symbol_list)<-ensgenes
     input<-as.matrix(rawcounts[,1:ncol(rawcounts)])
     rawmat<-squish(input,symbol_list,method="sum")
+    rawmat<-ComBat_seq(rawmat,batch = group) # Batch correction
     
     # VST
     #expmat<-vst(rawcounts)
