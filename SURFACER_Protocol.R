@@ -214,7 +214,7 @@ for (tissue in tissues) {
     names(symbol_list)<-ensgenes
     input<-as.matrix(rawcounts[,1:ncol(rawcounts)])
     rawmat<-squish(input,symbol_list,method="sum")
-    rawmat<-ComBat_seq(rawmat,batch = group) # Batch correction
+    rawmat<-ComBat_seq(rawmat,batch = group) # Batch correction, added to deal with batch problem
     
     # VST
     #expmat<-vst(rawcounts)
