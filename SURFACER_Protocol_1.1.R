@@ -39,9 +39,9 @@ library(xlsx)
 dir.create("plots")
 dir.create("results")
 ### load the surfacer gene list
-load("surfacer_2022_fixed.rda") # the surfacer list is included in this repository (main branch)
-source("squisher.R") # load the squisher function, R script is included in this repository (main branch)
-source("ensembl2symbol.R") # load the gene conversion function, R script is included in this repository (main branch)
+load("data/surfacer_2022_fixed.rda") # the surfacer list is included in this repository (main branch)
+source("data/squisher.R") # load the squisher function, R script is included in this repository (main branch)
+source("data/ensembl2symbol.R") # load the gene conversion function, R script is included in this repository (main branch)
 tissues<-c("adrenal gland","breast","brain","esophagus","liver","lung","ovary","pancreas", "prostate", "skin", 
            "stomach", "testis", "thyroid", "uterus") # NB: 'colon tissue is a valid tissue for GTEx only, while colorectal is the key word for TCGA'
 delist<-list()
@@ -124,7 +124,10 @@ for (tissue in tissues) {
       names(symbol_list)<-ensgenes
       input<-as.matrix(rawcounts[,1:ncol(rawcounts)])
       rawmat<-squish(input,symbol_list,method="sum")
-      rawmat<-ComBat_seq(rawmat,batch = batch, group = group) # Batch correction 
+      if (ncol(ntum)>0){
+        rawmat<-ComBat_seq(rawmat,batch = batch, group = group) # Batch correction 
+      } else { message(paste0("skip batch correction for: ", subtype))}
+      
       
       # VST
       #expmat<-vst(rawcounts)
@@ -185,7 +188,7 @@ for (tissue in tissues) {
       message(paste0("Doing ", subtype))
       if(!file.exists(paste0("results/000_tcga_",name,"_",subtype,"-mra.rda"))){
         newcounts<-expmat[rowVars(expmat)>0.01,]
-        mr<-mra(newcounts[,colnames(tumor)],newcounts[,colnames(gnorm)],regulon=regulon,minsize=15,nperm=1000,nthreads = 6,verbose=TRUE)
+        mr<-mra(newcounts[,colnames(tumor)],newcounts[,colnames(gnorm)],regulon=regulon,minsize=15,nperm=1000,nthreads = 12,verbose=TRUE)
         save(mr,file=paste0("results/000_tcga_",name,"_",subtype,"-mra.rda"))
       } else {load(paste0("results/000_tcga_",name,"_",subtype,"-mra.rda"))}
       gc()
@@ -230,7 +233,9 @@ for (tissue in tissues) {
     names(symbol_list)<-ensgenes
     input<-as.matrix(rawcounts[,1:ncol(rawcounts)])
     rawmat<-squish(input,symbol_list,method="sum")
-    rawmat<-ComBat_seq(rawmat,batch = batch, group = group) # Batch correction 
+    if (ncol(ntum)>0){
+      rawmat<-ComBat_seq(rawmat,batch = batch, group = group) # Batch correction 
+    } else { message(paste0("skip batch correction for: ", subtype))}
     
     # VST
     #expmat<-vst(rawcounts)
@@ -292,7 +297,7 @@ for (tissue in tissues) {
     message(paste0("Doing ", subtype))
     if(!file.exists(paste0("results/000_tcga_",name,"-mra.rda"))){
       newcounts<-expmat[rowVars(expmat)>0.01,]
-      mr<-mra(newcounts[,colnames(tumor)],newcounts[,colnames(gnorm)],regulon=regulon,minsize=15,nperm=1000,nthreads = 6,verbose=TRUE)
+      mr<-mra(newcounts[,colnames(tumor)],newcounts[,colnames(gnorm)],regulon=regulon,minsize=15,nperm=1000,nthreads = 12,verbose=TRUE)
       save(mr,file=paste0("results/000_tcga_",name,"-mra.rda"))
     } else {load(paste0("results/000_tcga_",name,"-mra.rda"))}
     gc()
