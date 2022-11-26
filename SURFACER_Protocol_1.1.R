@@ -152,7 +152,7 @@ for (tissue in tissues) {
       
       ### Differential Expression Analysis (step 3)
       # DESeq2 block (filter out poorly expressed genes)
-      group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(gnorm))))
+      group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(ntum)),rep("normal",ncol(gnorm))))
       names(group)<-colnames(rawmat)
       group<-relevel(group,ref="normal")
       design<-as.data.frame(group)
@@ -259,7 +259,7 @@ for (tissue in tissues) {
     ### Differential Expression Analysis (step 3)
     # DESeq2 block (filter out poorly expressed genes)
     i<-i+1
-    group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(gnorm))))
+    group<-factor(c(rep("tumor",ncol(tumor)),rep("normal",ncol(ntum)),rep("normal",ncol(gnorm))))
     names(group)<-colnames(rawmat)
     group<-relevel(group,ref="normal")
     design<-as.data.frame(group)
