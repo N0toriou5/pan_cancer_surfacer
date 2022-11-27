@@ -2,9 +2,12 @@
 homedir <- getwd()
 setwd(homedir)
 
-# 1.1 adds batch correction with ComBat between TCGA and GTEx, although very little difference is observed in downstream network analysis, 
+# 1.1 adds batch correction with ComBat between TCGA and GTEx (https://doi.org/10.1038/sdata.2018.61), 
+# although very little difference is observed in downstream network analysis, 
 # the batch should be taken into account when integrating datasets showing a wider difference
-# If the packages are not available, we will install them using Bioconductor. This code part install and load all required packages to run the SURFACER protocol.
+
+# If the packages are not available, we will install them using Bioconductor. 
+# This code part install and load all required packages to run the SURFACER protocol.
 
 if (!requireNamespace("BiocManager",quietly=TRUE)){
   install.packages("BiocManager")
@@ -18,7 +21,6 @@ for(p in packages){
   }
   library(p,character.only=TRUE)
 }
-
 
 # load all required libraries and set up the environment
 library(biomaRt)
