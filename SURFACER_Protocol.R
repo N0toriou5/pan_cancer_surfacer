@@ -1,5 +1,6 @@
 # SURFACER core pipeline
-# WARNING: the code below does not contain a batch effect correction step, please refer to the updated SURFACER_Protocol_1.1.R in this repository
+# !!: the code below does not contain a batch effect correction step,
+# if you require it, please refer to the updated SURFACER_Protocol_1.1.R in this repository
 
 setwd("set_your_home_dir/")
 
