@@ -4,7 +4,9 @@ setwd(homedir)
 
 # 1.1 adds batch correction with ComBat between TCGA and GTEx (https://doi.org/10.1038/sdata.2018.61), 
 # although very little difference is observed in downstream network analysis, 
-# the batch must be taken into account when integrating datasets coming from different sources
+# the batch should generally be taken into account when integrating datasets coming from different sources
+
+# However, as demonstrated by Aran et al, 2017 (https://www.nature.com/articles/s41467-017-01027-z), GTEx and TCGA can be analyzed jointly, since a general comparability between the datasets exists.
 
 # If the packages are not available, we will install them using Bioconductor. 
 # This code part install and load all required packages to run the SURFACER protocol.
