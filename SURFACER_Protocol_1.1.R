@@ -6,7 +6,8 @@ setwd(homedir)
 # although very little difference is observed in downstream network analysis, 
 # the batch should generally be taken into account when integrating datasets coming from different sources
 
-# However, as demonstrated by Aran et al, 2017 (https://www.nature.com/articles/s41467-017-01027-z), GTEx and TCGA can be analyzed jointly, since a general comparability between the datasets exists.
+# However, as demonstrated by Aran et al., 2017 (https://www.nature.com/articles/s41467-017-01027-z), 
+# GTEx and TCGA can be analyzed jointly, since a general comparability between these datasets exists.
 
 # If the packages are not available, we will install them using Bioconductor. 
 # This code part install and load all required packages to run the SURFACER protocol.
